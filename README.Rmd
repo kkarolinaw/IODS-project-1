@@ -1,0 +1,8 @@
+---
+title: "IODS course project"
+author: "Maria Karolina Wickholm"
+date: "7 marraskuuta 2017"
+output: html_document
+---
+
+moro
