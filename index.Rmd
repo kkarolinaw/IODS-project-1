@@ -11,7 +11,12 @@ output:
     fig_height: 4
     code_folding: hide
 ---
-
+---
+title: "IODS course project"
+author: "Maria Karolina Wickholm"
+date: "7 marraskuuta 2017"
+output: html_document
+---
 ***
   
 ```{r child = "chapter1.Rmd"}
