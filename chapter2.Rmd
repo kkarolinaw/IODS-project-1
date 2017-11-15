@@ -1,7 +1,247 @@
-# Insert chapter 2 title here
+---
+#Week 2: Regression and Model Validation
+Author: Maria Karolina Wickholm
+Date: 15.11..2017
+---
 
-*Describe the work you have done this week and summarize your learning.*
+#Week 2: Regression and Model Validation + Data Wrangling
+#BY: Maria Karolina Wickholm
 
-- Describe your work and results clearly. 
-- Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods
-- Assume the reader has no previous knowledge of your data or the more advanced methods you are using  
+
+This week, I tried for the first time actually doing something and producing data and 
+plots in R-Studio. The following will show my work step by step, also my errors, which i then decided to conquer and get to function better I've added the <marks> on the codes including errors, I hope this will also help some other n00bs on R to not to make the same mistakes as I did.
+
+The exercise consisted of two parts, in the first part some basic data wrangling is shown,
+and the second part consists of model validations and analyze
+
+Also, here is the link to my GitHub Repository, since I realized that last week I accidentally added this pages' link.... :D
+<https://github.com/kkarolinaw/IODS-project-1>
+---
+
+#DATA WRANGLING
+
+First try and ofcourse, wrong.
+
+<read.csv("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt") <- read.delim works better.>
+
+
+read.delim("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt") 
+http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt <- Learning2014
+Learning2014 <- read.delim("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt")
+str (Learning2014)
+summary (Learning2014)
+
+---
+
+The Data Learning 2014 includes 183 observations of 1 variable <- can this be true? Only 1 variable? I don't think so..At first I read the file with read.csv command, which gave me weird looking results when looking at the data set with command str. Changing the read.csv to read.delim, the dataset suddenly has 183 observations and 60 variables.  
+---
+
+#NEW TRY
+
+learn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
+dim(learn14)
+str(learn14)
+
+---
+
+Both read.delim and read.table gives the same information. 183 observations and 60 variables. The command dim shows the dimension of the dataset and str shows the structure.
+
+#NEXT UP: ANALYSIS
+
+Create an analysis dataset with the variables gender, age, attitude, deep, stra, surf and points by combining questions in the learning2014 data, as defined in the datacamp exercises and also on the bottom part of the following page (only the top part of the page is in Finnish). "http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt". Scale all combination variables to the original scales (by taking the mean). Exclude observations where the exam points variable is zero. (The data should then have 166 observations and 7 variables)
+
+To do this, install.packages(dplyr) command needs to be used, after which it can be called
+by the library function.
+
+---
+install.packages("dplyr")
+library(dplyr)
+learn14$gender
+learn14$Age
+learn14$Attitude
+<DID NOT WORK AT FIRST TIME learn14$Deep>
+<DID NOT WORK AT FIRST TIME learn14$Stra>
+<DID NOT WORK AT FIRST TIME learn14$Surf>
+learn14$Points
+
+---
+
+The reason why the sum variables deep, stra and surf did not work, was that they weren't 
+included in the data automatically. The following codes were used to make these sum variables exist. BTW, I just learned that the dollar sign in R markdown seems to produce inclined text, so when ever you see inclined text, there has been a dollar sign before it used as an attachment.
+
+
+---
+
+deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
+surface_questions <- c("SU02","SU10","SU18","SU26", "SU05","SU13","SU21","SU29","SU08","SU16","SU24","SU32")
+strategic_questions <- c("ST01","ST09","ST17","ST25","ST04","ST12","ST20","ST28")
+deep_columns <- select(learn14, one_of(deep_questions))
+learn14$deep <- rowMeans(deep_columns)
+surface_columns <- select(learn14, one_of(surface_questions))
+learn14$surf <- rowMeans(surface_columns)
+strategic_columns <- select(learn14, one_of(strategic_questions))
+learn14$stra <- rowMeans (strategic_columns)
+keep_columns <- c("gender","Age","Attitude", "deep", "stra", "surf", "Points")
+learning2014 <- select(learn14, one_of(keep_columns))
+
+---
+The following step shows how exam points where the variable has value 0 is excluded from the data.
+---
+
+learning2014 <- filter(learning2014, Points > 0)
+head(learning2014$Points)
+summary(learning2014$Points)
+dim(learning2014)
+---
+Observations 166, variables 7, ^^ 0 points excluded.
+Set the working directory of you R session the iods project folder (study how to do this with RStudio). Save the analysis dataset to the 'data' folder, using for example write.csv() or 'write.table() functions. You can name the data set for example as learning2014(.txt or .csv). See ?write.csv for help or search the web for pointers and examples. Demonstrate that you can also read the data again by using read.table() or read.csv().  (Use `str()` and `head()` to make sure that the structure of the data is correct).
+
+write.csv2(learning2014, file = "Week2.csv", row.names = FALSE)
+setwd("C:\Users\kawic\Desktop\IODS kurssi\DATA")
+Week2 <- read.csv2("week2.csv", header = TRUE)
+dim(Week2)
+---
+Regression and Model Validation: Analysis
+
+write.csv2(learning2014, file = "Week2.csv", row.names = FALSE)
+setwd("C:\Users\kawic\Desktop\IODS kurssi\DATA")
+Week2 <- read.csv2("week2.csv", header = TRUE)
+dim(Week2)
+
+Week2 <- read.csv2("Week2.csv", header = TRUE)
+str(Week2)
+dim(Week2)
+---
+
+The data consists of 166 observations and 7 variables considering different
+dimensions of learning. The data was gathered in year 2014 on a course
+called "Johdatus yhteiskuntatilastotieteeseen". Variables chosen to this project include several variables linked together to build up all together 7 variables. The variables are gender, age, attitude, deep learning, surface learning and points.
+
+To complete the following exercises, a few packages need to be installed. These are "ggplot2" and "Ggally". After installation, they can be called to use with the library function.
+---
+
+install.packages("ggplot2")
+library(ggplot2)
+---
+Show a graphical overview of the data and show summaries of the variables in the data. Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them.
+---
+install.packages("GGally")
+library(GGally)
+pairs(Week2[-1], col = Week2$gender)
+
+---
+In my opinion the second plot, drawn with GGally, looks better and more estethic. 
+This plot visualizes quite nicely the distribution of different variables. It shows for example, the gender distribution of the class 2014: mostly females and approximately 1/3 male students. What I found interesting in this plot, is how the attitude towards learning statistics seem to be more positive among male students. Male students also tend to get more points of the course. Briefly, could be said that male student score higher in most variables, with one exception: participation on the course.
+
+As a social scientist, I can't help my brain not to try to explain these occurances. First of all, the gender distribution, which includes mostly female students, can be explained by the enrollment in Helsinki University: females, more often than males, tend to continue education to a higher level. This can be seen as over representation of female students compared to male student in the class.
+
+Another interesting observation considers the variable "attitude", and it's 
+distribution by gender. As a sociologist, I can't help to think that the male
+students more positive attitude towards learning statistics spring from tendencies to encourage male students to mathematics already in elementary school and lower education. My hypothesis is that this has an long term effect on students attitude towards subject: if you as a child got encouraged to do and get involved in mathematics, this feeling "I can do this!", will most probably continue in adulthood and later learning. 
+
+---
+
+Choose three variables as explanatory variables and fit a regression model where exam points is the target (dependent) variable. Show a summary of the fitted model and comment and interpret the results. Explain and interpret the statistical test related to the model parameters. If an explanatory variable in your model does not have a statistically significant relationship with the target variable, remove the variable from the model and fit the model again without it.
+---
+
+p <- ggpairs(Week2, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
+p
+
+ggpairs(Week2, lower = list(combo = wrap("facethist", bins = 20)))
+my_model2 <- lm(Points ~ Attitude + deep + surf, data = Week2)
+summary(my_model2)
+---
+The commands aboce give some basic statistics about three explanatory variables, in this case, "attitude", "deep" and "surf", and their coefficients with the dependent variable "points".
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 18.35507    4.71237   3.895 0.000143 ***
+Attitude     0.34661    0.05766   6.011 1.18e-08 ***
+deep        -0.94846    0.79025  -1.200 0.231815    
+surf        -1.09114    0.83599  -1.305 0.193669   
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.296 on 162 degrees of freedom
+Multiple R-squared:  0.2074,	Adjusted R-squared:  0.1927 
+F-statistic: 14.13 on 3 and 162 DF,  p-value: 3.156e-08
+
+
+From this table can be seen, that the coefficiency with the variable "points",
+is strongest at the variable "attitude". When looking at the p-value (Pr(>|t|),it is usually seen as a good sign to have a p-value of 0.05 or less than 0.05. This would indicate that the results shown wouldn't have happened due to random variation. "There's a 5% chance or less of this happening just due to random variation". When looking at the p-values of the former three variables, can be seen that this is not true to any of the chosen variables. Let's see whether the p-value changes if variable "deep"" was changed to "stra". In both cases the variable "attitude" gets a pretty high p-value, so I decided to change the explanatory variables to "deep", "stra" and "surf" and see what happens.
+
+---
+ggpairs(Week2, lower = list(combo = wrap("facethist", bins = 20)))
+my_model2 <- lm(Points ~ deep + stra + surf, data = Week2)
+summary(my_model2)
+
+---
+This still gives fairly high P-values, but lets go onwards.
+
+lm(formula = Points ~ deep + stra + surf, data = Week2)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-15.1235  -3.0737   0.5226   4.2799  10.3229 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  26.9143     5.1169   5.260  4.5e-07 ***
+deep         -0.7443     0.8662  -0.859   0.3915    
+stra          0.9878     0.5962   1.657   0.0994 .  
+surf         -1.6296     0.9153  -1.780   0.0769 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.827 on 162 degrees of freedom
+Multiple R-squared:  0.04071,	Adjusted R-squared:  0.02295 
+F-statistic: 2.292 on 3 and 162 DF,  p-value: 0.08016
+---
+
+Using a summary of your fitted model, explain the relationship between the chosen explanatory variables and the target variable (interpret the model parameters). Explain and interpret the multiple R squared of the model.
+
+When looking at the two models above, can be seen that the R squared in this first model (attitude included), gets a Multiple R squared value of 0.2074 and a Adjusted R-squared value of 0.1927. In the second try where the variable "attitude" has been replaced with the variable "deep", the Multiple R-squared value is 0.04071 and Adjusted R-squared 0.02295. So the first model, which includes the variable attitude, gets a higher R-squared value.
+
+About R-squared value
+
+R-squared is a statistical measure of how close the data are to the fitted regression line. It is also known as the coefficient of determination, or the coefficient of multiple determination for multiple regression.
+
+The definition of R-squared is fairly straight-forward; it is the percentage of the response variable variation that is explained by a linear model. Or:
+
+R-squared = Explained variation / Total variation
+
+R-squared is always between 0 and 100%:
+
+->0% indicates that the model explains none of the variability of the response data around its mean.
+->100% indicates that the model explains all the variability of the response data around its mean.
+
+In general, the higher the R-squared, the better the model fits your data.
+
+So eventhough the P-value seemed to be too high in the first model, if looking
+only at the R-squared value, looks like the first model explained better the 
+dependent variable "points". 
+
+---
+
+Produce the following diagnostic plots: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage. Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots.
+---
+my_model2 <- lm(Points ~ Attitude + stra + surf, data = Week2)
+par(mfrow = c(2,2))
+plot(my_model2, which = c(1,2,5))
+---
+Okay, first of all, a basic look to what these diagnostic plots or so called model validations are used for.
+1) How well the model describes the phenomenon of interest, depends on how well the assumptions fit reality.
+2) In a linear regression model an obcious assumption is linearity: The target variable is modelled as a linear combination of the model parameters.
+3) Usually it is assumed that the errors are normally distributed.
+ Analyzing the residuals of the fitted model is used to explore the validity of the model assumptions. This analyze is visualized in the Residuals vs Fitted plot. Here we can see that the points are pretty nicely scattered in the plot. 
+The second plot, Q-Q plot, therefor provides a method to explore the assumption that
+the errors of the model are normally distributed. The Normal Q-Q plot produced seems
+reasonable with the chosen variables, since the points fit pretty nicely the line. 
+The third plot "Residuals vs Leverage" therefor shows the constant variance errors. 
+This constant variance assumption implies that the errors should not depend on the explanatory variables. Any pattern in the scatter plot can be seen as a implement of 
+a problem with the assumptions. The Residuals vs Leverage plot with the chosen variables seem decent, but the spreading of the dots indicates that there might be a even better
+coefficiency with some other variables. 
+
+#WOOOPWOOP I SURVIVED! Got 'em codes working!! And maybe even learned something! What a great feeling.
+
+Am sorry though about some of the text being in larger size, eventhough I removed all the useless hashtags from this text, they somehow did not change back to normal.. If you have any suggestions why this is happening, please let me know (:
+
+ Thanks bye, see you next week <3
