@@ -1,5 +1,4 @@
 ---
-#Week 2: Regression and Model Validation
 Author: Maria Karolina Wickholm
 Date: 15.11..2017
 ---

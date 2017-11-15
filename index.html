@@ -9,7 +9,6 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Maria Karolina Wickholm" />
 
 
 <title>IODS course project</title>
@@ -134,15 +133,24 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">IODS course project</h1>
-<h4 class="author"><em>Maria Karolina Wickholm</em></h4>
-<h4 class="date"><em>7 marraskuuta 2017</em></h4>
 
 </div>
 
 <div id="TOC">
 <ul>
 <li><a href="#iods-course-project">“IODS-Course-project”</a></li>
-<li><a href="#insert-chapter-2-title-here">Insert chapter 2 title here</a></li>
+<li><a href="#week-2-regression-and-model-validation-data-wrangling">Week 2: Regression and Model Validation + Data Wrangling</a></li>
+<li><a href="#by-maria-karolina-wickholm">BY: Maria Karolina Wickholm</a></li>
+<li><a href="#data-wrangling">DATA WRANGLING</a><ul>
+<li><a href="#the-data-learning-2014-includes-183-observations-of-1-variable---can-this-be-true-only-1-variable-i-dont-think-so..at-first-i-read-the-file-with-read.csv-command-which-gave-me-weird-looking-results-when-looking-at-the-data-set-with-command-str.-changing-the-read.csv-to-read.delim-the-dataset-suddenly-has-183-observations-and-60-variables.">The Data Learning 2014 includes 183 observations of 1 variable &lt;- can this be true? Only 1 variable? I don’t think so..At first I read the file with read.csv command, which gave me weird looking results when looking at the data set with command str. Changing the read.csv to read.delim, the dataset suddenly has 183 observations and 60 variables.</a></li>
+</ul></li>
+<li><a href="#new-try">NEW TRY</a></li>
+<li><a href="#next-up-analysis">NEXT UP: ANALYSIS</a><ul>
+<li><a href="#to-complete-the-following-exercises-a-few-packages-need-to-be-installed.-these-are-ggplot2-and-ggally.-after-installation-they-can-be-called-to-use-with-the-library-function.">To complete the following exercises, a few packages need to be installed. These are “ggplot2” and “Ggally”. After installation, they can be called to use with the library function.</a></li>
+<li><a href="#choose-three-variables-as-explanatory-variables-and-fit-a-regression-model-where-exam-points-is-the-target-dependent-variable.-show-a-summary-of-the-fitted-model-and-comment-and-interpret-the-results.-explain-and-interpret-the-statistical-test-related-to-the-model-parameters.-if-an-explanatory-variable-in-your-model-does-not-have-a-statistically-significant-relationship-with-the-target-variable-remove-the-variable-from-the-model-and-fit-the-model-again-without-it.">Choose three variables as explanatory variables and fit a regression model where exam points is the target (dependent) variable. Show a summary of the fitted model and comment and interpret the results. Explain and interpret the statistical test related to the model parameters. If an explanatory variable in your model does not have a statistically significant relationship with the target variable, remove the variable from the model and fit the model again without it.</a></li>
+<li><a href="#produce-the-following-diagnostic-plots-residuals-vs-fitted-values-normal-qq-plot-and-residuals-vs-leverage.-explain-the-assumptions-of-the-model-and-interpret-the-validity-of-those-assumptions-based-on-the-diagnostic-plots.">Produce the following diagnostic plots: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage. Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots.</a></li>
+</ul></li>
+<li><a href="#wooopwoop-i-survived-got-em-codes-working-and-maybe-even-learned-something-what-a-great-feeling.">WOOOPWOOP I SURVIVED! Got ’em codes working!! And maybe even learned something! What a great feeling.</a></li>
 </ul>
 </div>
 
@@ -152,14 +160,86 @@ $(document).ready(function () {
 <p>About this project <em>My project aims to get to know and understand how open data science works. You can follow my progress on GitHub! <a href="https://kkarolinaw.github.io/IODS-project-1/" class="uri">https://kkarolinaw.github.io/IODS-project-1/</a> </em></p>
 <hr />
 </div>
-<div id="insert-chapter-2-title-here" class="section level1">
-<h1>Insert chapter 2 title here</h1>
-<p><em>Describe the work you have done this week and summarize your learning.</em></p>
-<ul>
-<li>Describe your work and results clearly.</li>
-<li>Assume the reader has an introductory course level understanding of writing and reading R code as well as statistical methods</li>
-<li>Assume the reader has no previous knowledge of your data or the more advanced methods you are using</li>
-</ul>
+<div id="week-2-regression-and-model-validation-data-wrangling" class="section level1">
+<h1>Week 2: Regression and Model Validation + Data Wrangling</h1>
+</div>
+<div id="by-maria-karolina-wickholm" class="section level1">
+<h1>BY: Maria Karolina Wickholm</h1>
+<p>This week, I tried for the first time actually doing something and producing data and plots in R-Studio. The following will show my work step by step, also my errors, which i then decided to conquer and get to function better I’ve added the <marks> on the codes including errors, I hope this will also help some other n00bs on R to not to make the same mistakes as I did.</p>
+<p>The exercise consisted of two parts, in the first part some basic data wrangling is shown, and the second part consists of model validations and analyze</p>
+<p>Also, here is the link to my GitHub Repository, since I realized that last week I accidentally added this pages’ link…. :D <a href="https://github.com/kkarolinaw/IODS-project-1" class="uri">https://github.com/kkarolinaw/IODS-project-1</a> —</p>
+</div>
+<div id="data-wrangling" class="section level1">
+<h1>DATA WRANGLING</h1>
+<p>First try and ofcourse, wrong.</p>
+<p>&lt;read.csv(“<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a>”) &lt;- read.delim works better.&gt;</p>
+<p>read.delim(“<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a>”) <a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a> &lt;- Learning2014 Learning2014 &lt;- read.delim(“<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a>”) str (Learning2014) summary (Learning2014)</p>
+<hr />
+<div id="the-data-learning-2014-includes-183-observations-of-1-variable---can-this-be-true-only-1-variable-i-dont-think-so..at-first-i-read-the-file-with-read.csv-command-which-gave-me-weird-looking-results-when-looking-at-the-data-set-with-command-str.-changing-the-read.csv-to-read.delim-the-dataset-suddenly-has-183-observations-and-60-variables." class="section level2">
+<h2>The Data Learning 2014 includes 183 observations of 1 variable &lt;- can this be true? Only 1 variable? I don’t think so..At first I read the file with read.csv command, which gave me weird looking results when looking at the data set with command str. Changing the read.csv to read.delim, the dataset suddenly has 183 observations and 60 variables.</h2>
+</div>
+</div>
+<div id="new-try" class="section level1">
+<h1>NEW TRY</h1>
+<p>learn14 &lt;- read.table(“<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt</a>”, sep=“”, header=TRUE) dim(learn14) str(learn14)</p>
+<hr />
+<p>Both read.delim and read.table gives the same information. 183 observations and 60 variables. The command dim shows the dimension of the dataset and str shows the structure.</p>
+</div>
+<div id="next-up-analysis" class="section level1">
+<h1>NEXT UP: ANALYSIS</h1>
+<p>Create an analysis dataset with the variables gender, age, attitude, deep, stra, surf and points by combining questions in the learning2014 data, as defined in the datacamp exercises and also on the bottom part of the following page (only the top part of the page is in Finnish). “<a href="http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt" class="uri">http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS2-meta.txt</a>”. Scale all combination variables to the original scales (by taking the mean). Exclude observations where the exam points variable is zero. (The data should then have 166 observations and 7 variables)</p>
+<p>To do this, install.packages(dplyr) command needs to be used, after which it can be called by the library function.</p>
+<p>The reason why the sum variables deep, stra and surf did not work, was that they weren’t included in the data automatically. The following codes were used to make these sum variables exist. BTW, I just learned that the dollar sign in R markdown seems to produce inclined text, so when ever you see inclined text, there has been a dollar sign before it used as an attachment.</p>
+<hr />
+<p>deep_questions &lt;- c(“D03”, “D11”, “D19”, “D27”, “D07”, “D14”, “D22”, “D30”,“D06”, “D15”, “D23”, “D31”) surface_questions &lt;- c(“SU02”,“SU10”,“SU18”,“SU26”, “SU05”,“SU13”,“SU21”,“SU29”,“SU08”,“SU16”,“SU24”,“SU32”) strategic_questions &lt;- c(“ST01”,“ST09”,“ST17”,“ST25”,“ST04”,“ST12”,“ST20”,“ST28”) deep_columns &lt;- select(learn14, one_of(deep_questions)) learn14<span class="math inline">\(deep &lt;- rowMeans(deep_columns) surface_columns &lt;- select(learn14, one_of(surface_questions)) learn14\)</span>surf &lt;- rowMeans(surface_columns) strategic_columns &lt;- select(learn14, one_of(strategic_questions)) learn14$stra &lt;- rowMeans (strategic_columns) keep_columns &lt;- c(“gender”,“Age”,“Attitude”, “deep”, “stra”, “surf”, “Points”) learning2014 &lt;- select(learn14, one_of(keep_columns))</p>
+<p>learning2014 &lt;- filter(learning2014, Points &gt; 0) head(learning2014<span class="math inline">\(Points) summary(learning2014\)</span>Points) dim(learning2014) — Observations 166, variables 7, ^^ 0 points excluded. Set the working directory of you R session the iods project folder (study how to do this with RStudio). Save the analysis dataset to the ‘data’ folder, using for example write.csv() or ’write.table() functions. You can name the data set for example as learning2014(.txt or .csv). See ?write.csv for help or search the web for pointers and examples. Demonstrate that you can also read the data again by using read.table() or read.csv(). (Use <code>str()</code> and <code>head()</code> to make sure that the structure of the data is correct).</p>
+<p>write.csv2(learning2014, file = “Week2.csv”, row.names = FALSE) setwd(“C:kurssi”) Week2 &lt;- read.csv2(“week2.csv”, header = TRUE) dim(Week2) — Regression and Model Validation: Analysis</p>
+<p>write.csv2(learning2014, file = “Week2.csv”, row.names = FALSE) setwd(“C:kurssi”) Week2 &lt;- read.csv2(“week2.csv”, header = TRUE) dim(Week2)</p>
+<p>Week2 &lt;- read.csv2(“Week2.csv”, header = TRUE) str(Week2) dim(Week2) —</p>
+<p>The data consists of 166 observations and 7 variables considering different dimensions of learning. The data was gathered in year 2014 on a course called “Johdatus yhteiskuntatilastotieteeseen”. Variables chosen to this project include several variables linked together to build up all together 7 variables. The variables are gender, age, attitude, deep learning, surface learning and points.</p>
+<div id="to-complete-the-following-exercises-a-few-packages-need-to-be-installed.-these-are-ggplot2-and-ggally.-after-installation-they-can-be-called-to-use-with-the-library-function." class="section level2">
+<h2>To complete the following exercises, a few packages need to be installed. These are “ggplot2” and “Ggally”. After installation, they can be called to use with the library function.</h2>
+<p>install.packages(“ggplot2”) library(ggplot2) — Show a graphical overview of the data and show summaries of the variables in the data. Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them. — install.packages(“GGally”) library(GGally) pairs(Week2[-1], col = Week2$gender)</p>
+</div>
+<div id="choose-three-variables-as-explanatory-variables-and-fit-a-regression-model-where-exam-points-is-the-target-dependent-variable.-show-a-summary-of-the-fitted-model-and-comment-and-interpret-the-results.-explain-and-interpret-the-statistical-test-related-to-the-model-parameters.-if-an-explanatory-variable-in-your-model-does-not-have-a-statistically-significant-relationship-with-the-target-variable-remove-the-variable-from-the-model-and-fit-the-model-again-without-it." class="section level2">
+<h2>Choose three variables as explanatory variables and fit a regression model where exam points is the target (dependent) variable. Show a summary of the fitted model and comment and interpret the results. Explain and interpret the statistical test related to the model parameters. If an explanatory variable in your model does not have a statistically significant relationship with the target variable, remove the variable from the model and fit the model again without it.</h2>
+<p>p &lt;- ggpairs(Week2, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap(“facethist”, bins = 20))) p</p>
+<p>ggpairs(Week2, lower = list(combo = wrap(“facethist”, bins = 20))) my_model2 &lt;- lm(Points ~ Attitude + deep + surf, data = Week2) summary(my_model2) — The commands aboce give some basic statistics about three explanatory variables, in this case, “attitude”, “deep” and “surf”, and their coefficients with the dependent variable “points”. Coefficients: Estimate Std. Error t value Pr(&gt;|t|)<br />
+(Intercept) 18.35507 4.71237 3.895 0.000143 <strong><em> Attitude 0.34661 0.05766 6.011 1.18e-08 </em></strong> deep -0.94846 0.79025 -1.200 0.231815<br />
+surf -1.09114 0.83599 -1.305 0.193669<br />
+Signif. codes: 0 ‘<em><strong>’ 0.001 ’</strong>’ 0.01 ’</em>’ 0.05 ‘.’ 0.1 ‘’ 1</p>
+<p>Residual standard error: 5.296 on 162 degrees of freedom Multiple R-squared: 0.2074, Adjusted R-squared: 0.1927 F-statistic: 14.13 on 3 and 162 DF, p-value: 3.156e-08</p>
+<p>From this table can be seen, that the coefficiency with the variable “points”, is strongest at the variable “attitude”. When looking at the p-value (Pr(&gt;|t|),it is usually seen as a good sign to have a p-value of 0.05 or less than 0.05. This would indicate that the results shown wouldn’t have happened due to random variation. “There’s a 5% chance or less of this happening just due to random variation”. When looking at the p-values of the former three variables, can be seen that this is not true to any of the chosen variables. Let’s see whether the p-value changes if variable “deep”&quot; was changed to “stra”. In both cases the variable “attitude” gets a pretty high p-value, so I decided to change the explanatory variables to “deep”, “stra” and “surf” and see what happens.</p>
+<p>This still gives fairly high P-values, but lets go onwards.</p>
+<p>lm(formula = Points ~ deep + stra + surf, data = Week2)</p>
+<p>Residuals: Min 1Q Median 3Q Max -15.1235 -3.0737 0.5226 4.2799 10.3229</p>
+<p>Coefficients: Estimate Std. Error t value Pr(&gt;|t|)<br />
+(Intercept) 26.9143 5.1169 5.260 4.5e-07 *** deep -0.7443 0.8662 -0.859 0.3915<br />
+stra 0.9878 0.5962 1.657 0.0994 .<br />
+surf -1.6296 0.9153 -1.780 0.0769 .<br />
+— Signif. codes: 0 ‘<em><strong>’ 0.001 ’</strong>’ 0.01 ’</em>’ 0.05 ‘.’ 0.1 ‘’ 1</p>
+<p>Residual standard error: 5.827 on 162 degrees of freedom Multiple R-squared: 0.04071, Adjusted R-squared: 0.02295 F-statistic: 2.292 on 3 and 162 DF, p-value: 0.08016 —</p>
+<p>Using a summary of your fitted model, explain the relationship between the chosen explanatory variables and the target variable (interpret the model parameters). Explain and interpret the multiple R squared of the model.</p>
+<p>When looking at the two models above, can be seen that the R squared in this first model (attitude included), gets a Multiple R squared value of 0.2074 and a Adjusted R-squared value of 0.1927. In the second try where the variable “attitude” has been replaced with the variable “deep”, the Multiple R-squared value is 0.04071 and Adjusted R-squared 0.02295. So the first model, which includes the variable attitude, gets a higher R-squared value.</p>
+<p>About R-squared value</p>
+<p>R-squared is a statistical measure of how close the data are to the fitted regression line. It is also known as the coefficient of determination, or the coefficient of multiple determination for multiple regression.</p>
+<p>The definition of R-squared is fairly straight-forward; it is the percentage of the response variable variation that is explained by a linear model. Or:</p>
+<p>R-squared = Explained variation / Total variation</p>
+<p>R-squared is always between 0 and 100%:</p>
+<p>-&gt;0% indicates that the model explains none of the variability of the response data around its mean. -&gt;100% indicates that the model explains all the variability of the response data around its mean.</p>
+<p>In general, the higher the R-squared, the better the model fits your data.</p>
+<p>So eventhough the P-value seemed to be too high in the first model, if looking only at the R-squared value, looks like the first model explained better the dependent variable “points”.</p>
+<hr />
+</div>
+<div id="produce-the-following-diagnostic-plots-residuals-vs-fitted-values-normal-qq-plot-and-residuals-vs-leverage.-explain-the-assumptions-of-the-model-and-interpret-the-validity-of-those-assumptions-based-on-the-diagnostic-plots." class="section level2">
+<h2>Produce the following diagnostic plots: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage. Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots.</h2>
+<p>my_model2 &lt;- lm(Points ~ Attitude + stra + surf, data = Week2) par(mfrow = c(2,2)) plot(my_model2, which = c(1,2,5)) — Okay, first of all, a basic look to what these diagnostic plots or so called model validations are used for. 1) How well the model describes the phenomenon of interest, depends on how well the assumptions fit reality. 2) In a linear regression model an obcious assumption is linearity: The target variable is modelled as a linear combination of the model parameters. 3) Usually it is assumed that the errors are normally distributed. Analyzing the residuals of the fitted model is used to explore the validity of the model assumptions. This analyze is visualized in the Residuals vs Fitted plot. Here we can see that the points are pretty nicely scattered in the plot. The second plot, Q-Q plot, therefor provides a method to explore the assumption that the errors of the model are normally distributed. The Normal Q-Q plot produced seems reasonable with the chosen variables, since the points fit pretty nicely the line. The third plot “Residuals vs Leverage” therefor shows the constant variance errors. This constant variance assumption implies that the errors should not depend on the explanatory variables. Any pattern in the scatter plot can be seen as a implement of a problem with the assumptions. The Residuals vs Leverage plot with the chosen variables seem decent, but the spreading of the dots indicates that there might be a even better coefficiency with some other variables.</p>
+</div>
+</div>
+<div id="wooopwoop-i-survived-got-em-codes-working-and-maybe-even-learned-something-what-a-great-feeling." class="section level1">
+<h1>WOOOPWOOP I SURVIVED! Got ’em codes working!! And maybe even learned something! What a great feeling.</h1>
+<p>Am sorry though about some of the text being in larger size, eventhough I removed all the useless hashtags from this text, they somehow did not change back to normal.. If you have any suggestions why this is happening, please let me know (:</p>
+<p>Thanks bye, see you next week &lt;3</p>
 <hr />
 </div>
 
