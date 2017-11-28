@@ -1,0 +1,105 @@
+---
+title: "chapter4.Rmd"
+author: "Maria Karolina Wickholm"
+date: "28 marraskuuta 2017"
+output: html_document
+---
+```{r}
+library(MASS)
+```
+```{r}
+data("Boston")
+```
+```{r}
+str(Boston)
+dim(Boston)
+```
+The Boston data frame has 506 observations and 14 variables.
+The data set consist of information needed to know while looking at housing values in suburbs in Boston.
+The columns in the data set:
+crim
+per capita crime rate by town.
+zn
+proportion of residential land zoned for lots over 25,000 sq.ft.
+indus
+proportion of non-retail business acres per town.
+chas
+Charles River dummy variable (= 1 if tract bounds river; 0 otherwise).
+nox
+nitrogen oxides concentration (parts per 10 million).
+rm
+average number of rooms per dwelling.
+age
+proportion of owner-occupied units built prior to 1940.
+dis
+weighted mean of distances to five Boston employment centres.
+rad
+index of accessibility to radial highways.
+tax
+full-value property-tax rate per \$10,000.
+ptratio
+pupil-teacher ratio by town.
+black
+1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town.
+lstat
+lower status of the population (percent).
+medv
+median value of owner-occupied homes in \$1000s.
+```{r}
+pairs(Boston)
+library(MASS)
+library(tidyverse)
+library(corrplot)
+```
+```{r}
+cor_matrix<-cor(Boston) %>% round (digits = 2)
+cor_matrix
+corrplot(cor_matrix, method="circle", type = "upper", cl.pos = "b", tl.pos = "d", tl.cex = 0.6)
+```
+From the plot drawn with corrplot command, can be seen which variable correlates more or less with some other variables. Positive correlations are shown as blue and negative correlations as red. The bigger the dot the bigger the correlation. Here in the Boston data set can be seen that variables indus x dis (-0.71), nax x dis(-0.77) and age x dis(-0.75) have the largest negative correlations, and are shown as largest, most red pigmented dots. Variables rad x tax (0,91), indus x nox (0,76) and nox x age (0,73) all give pretty big, pigmented blue dots. Some variables have almost no correlation with each other, such are for example rm x chas (0,09). Looking at the chas variable, it's correlation is rather small with all othet variables too, variating from -0.12 to 0.18. Seems like the so called "Charles River dummy variable" has almost nothing or atleast just a little to do with Boston housing prizes.
+```{r}
+summary(Boston)
+```
+
+```{r}
+boston_scaled <- scale(Boston)
+summary(boston_scaled)
+```
+The scale command subtracts the column means from the corresponding columns and divide the difference with standard deviation. Here we can see the summary of Boston data set scaled. 
+```{r}
+boston_scaled <- as.data.frame(boston_scaled)
+```
+```{r}
+library(dplyr)
+```
+```{r}
+summary(boston_scaled$crim)
+bins <- quantile(boston_scaled$crim)
+bins
+crime <- cut(boston_scaled$crim, breaks = bins, include.lowest = TRUE, labels = c("low", "med_low", "med_high", "high"))
+table(crime)
+n <- nrow(boston_scaled)
+ind <- sample(n,  size = n * 0.8)
+train <- boston_scaled[ind,]
+test <- boston_scaled[-ind,]
+correct_classes <- test$crime
+test <- dplyr::select(test, -crime)
+```
+```{r}
+lda.fit <- lda(formula= crime ~ ., data = train)
+lda.fit
+lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
+  heads <- coef(x)
+  arrows(x0 = 0, y0 = 0, 
+         x1 = myscale * heads[,choices[1]], 
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads, cex = tex, col=color, pos=3) 
+       
+}
+
+```
+```{r}
+  classes <- as.numeric(train$crime)
+  plot(lda.fit, dimen = 2, col = classes, pch = classes)
+lda.arrows(lda.fit, myscale = 1)
+plot.new
+```
