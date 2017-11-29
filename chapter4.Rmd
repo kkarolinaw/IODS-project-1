@@ -4,6 +4,7 @@ author: "Maria Karolina Wickholm"
 date: "28 marraskuuta 2017"
 output: html_document
 ---
+<https://github.com/kkarolinaw/IODS-project-1>
 ```{r}
 library(MASS)
 ```
