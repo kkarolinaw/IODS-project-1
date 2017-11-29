@@ -65,7 +65,7 @@ summary(Boston)
 boston_scaled <- scale(Boston)
 summary(boston_scaled)
 ```
-The scale command subtracts the column means from the corresponding columns and divide the difference with standard deviation. Here we can see the summary of Boston data set scaled. 
+The scale command subtracts the column means from the corresponding columns and divide the difference with standard deviation. Here we can see the summary of Boston data set scaled. This is done so that linear discriminant analysis would be possible, since it requires the variables to have the same variance. 
 ```{r}
 boston_scaled <- as.data.frame(boston_scaled)
 ```
@@ -78,28 +78,45 @@ bins <- quantile(boston_scaled$crim)
 bins
 crime <- cut(boston_scaled$crim, breaks = bins, include.lowest = TRUE, labels = c("low", "med_low", "med_high", "high"))
 table(crime)
+boston_scaled <- dplyr::select(boston_scaled, -crim)
+boston_scaled <- data.frame(boston_scaled, crime)
 n <- nrow(boston_scaled)
 ind <- sample(n,  size = n * 0.8)
 train <- boston_scaled[ind,]
 test <- boston_scaled[-ind,]
-correct_classes <- test$crime
-test <- dplyr::select(test, -crime)
+correct_classes <- boston_scaled$crim
 ```
+
 ```{r}
-lda.fit <- lda(formula= crime ~ ., data = train)
+lda.fit <- lda(crime ~ ., data = train)
 lda.fit
 lda.arrows <- function(x, myscale = 1, arrow_heads = 0.1, color = "red", tex = 0.75, choices = c(1,2)){
   heads <- coef(x)
   arrows(x0 = 0, y0 = 0, 
          x1 = myscale * heads[,choices[1]], 
-         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads, cex = tex, col=color, pos=3) 
-       
+         y1 = myscale * heads[,choices[2]], col=color, length = arrow_heads)
+  text(myscale * heads[,choices], labels = row.names(heads), 
+       cex = tex, col=color, pos=3)
 }
-
-```
-```{r}
-  classes <- as.numeric(train$crime)
-  plot(lda.fit, dimen = 2, col = classes, pch = classes)
+classes <- as.numeric(train$crime)
+plot(lda.fit, dimen = 2, col = classes, pch = classes)
 lda.arrows(lda.fit, myscale = 1)
 plot.new
 ```
+Got the LD1 drawn WOOP finally!
+#
+problems with this code
+test <- scale(test)
+test_scaled <- as.data.frame(test)
+lda.pred <- predict(lda.fit, newdata = test_scaled)
+table(correct = correct_classes, predicted = lda.pred$class)
+
+```{r}
+data('Boston')
+BostonAgain <- scale(Boston)
+dist_eu <- dist(BostonAgain)
+summary (dist_eu)
+km <-kmeans(BostonAgain, centers = 3)
+pairs(BostonAgain, col = km$cluster)
+```
+I think I'm having a little problem since it seems like the data measured with euklidean distance command would not let me print out the kmeans for the distanced data. I did however get BostonAgain data printed out by pairs command, but since this data set still lacks the distance measure, the plot it pretty impossible to read. I tried the as.data.frame function at first to create the data set including the measured distances, but somehow it didn't let me. If you have any suggestion how this could be fixed, would appreciate :)
