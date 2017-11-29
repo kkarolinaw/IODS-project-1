@@ -36,11 +36,11 @@ The Data Learning 2014 includes 183 observations of 1 variable <- can this be tr
 ---
 
 #NEW TRY
-
+```{r}
 learn14 <- read.table("http://www.helsinki.fi/~kvehkala/JYTmooc/JYTOPKYS3-data.txt", sep="\t", header=TRUE)
 dim(learn14)
 str(learn14)
-
+```
 ---
 
 Both read.delim and read.table gives the same information. 183 observations and 60 variables. The command dim shows the dimension of the dataset and str shows the structure.
@@ -51,26 +51,20 @@ Create an analysis dataset with the variables gender, age, attitude, deep, stra,
 
 To do this, install.packages(dplyr) command needs to be used, after which it can be called
 by the library function.
-
----
+```{r}
 install.packages("dplyr")
 library(dplyr)
 learn14$gender
 learn14$Age
 learn14$Attitude
-<DID NOT WORK AT FIRST TIME learn14$Deep>
-<DID NOT WORK AT FIRST TIME learn14$Stra>
-<DID NOT WORK AT FIRST TIME learn14$Surf>
 learn14$Points
-
----
-
+```
 The reason why the sum variables deep, stra and surf did not work, was that they weren't 
 included in the data automatically. The following codes were used to make these sum variables exist. BTW, I just learned that the dollar sign in R markdown seems to produce inclined text, so when ever you see inclined text, there has been a dollar sign before it used as an attachment.
 
 
 ---
-
+```{r}
 deep_questions <- c("D03", "D11", "D19", "D27", "D07", "D14", "D22", "D30","D06",  "D15", "D23", "D31")
 surface_questions <- c("SU02","SU10","SU18","SU26", "SU05","SU13","SU21","SU29","SU08","SU16","SU24","SU32")
 strategic_questions <- c("ST01","ST09","ST17","ST25","ST04","ST12","ST20","ST28")
@@ -82,35 +76,36 @@ strategic_columns <- select(learn14, one_of(strategic_questions))
 learn14$stra <- rowMeans (strategic_columns)
 keep_columns <- c("gender","Age","Attitude", "deep", "stra", "surf", "Points")
 learning2014 <- select(learn14, one_of(keep_columns))
-
+```
 ---
 The following step shows how exam points where the variable has value 0 is excluded from the data.
 ---
-
+```{r}
 learning2014 <- filter(learning2014, Points > 0)
 head(learning2014$Points)
 summary(learning2014$Points)
 dim(learning2014)
----
+```
 Observations 166, variables 7, ^^ 0 points excluded.
 Set the working directory of you R session the iods project folder (study how to do this with RStudio). Save the analysis dataset to the 'data' folder, using for example write.csv() or 'write.table() functions. You can name the data set for example as learning2014(.txt or .csv). See ?write.csv for help or search the web for pointers and examples. Demonstrate that you can also read the data again by using read.table() or read.csv().  (Use `str()` and `head()` to make sure that the structure of the data is correct).
-
+```{r}
 write.csv2(learning2014, file = "Week2.csv", row.names = FALSE)
 setwd("C:\Users\kawic\Desktop\IODS kurssi\DATA")
 Week2 <- read.csv2("week2.csv", header = TRUE)
 dim(Week2)
+```
 ---
 Regression and Model Validation: Analysis
-
+```{r}
 write.csv2(learning2014, file = "Week2.csv", row.names = FALSE)
 setwd("C:\Users\kawic\Desktop\IODS kurssi\DATA")
 Week2 <- read.csv2("week2.csv", header = TRUE)
 dim(Week2)
-
 Week2 <- read.csv2("Week2.csv", header = TRUE)
 str(Week2)
 dim(Week2)
----
+```
+
 
 The data consists of 166 observations and 7 variables considering different
 dimensions of learning. The data was gathered in year 2014 on a course
@@ -118,16 +113,18 @@ called "Johdatus yhteiskuntatilastotieteeseen". Variables chosen to this project
 
 To complete the following exercises, a few packages need to be installed. These are "ggplot2" and "Ggally". After installation, they can be called to use with the library function.
 ---
-
+```{r}
 install.packages("ggplot2")
 library(ggplot2)
+```
 ---
 Show a graphical overview of the data and show summaries of the variables in the data. Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them.
 ---
+```{r}
 install.packages("GGally")
 library(GGally)
 pairs(Week2[-1], col = Week2$gender)
-
+```
 ---
 In my opinion the second plot, drawn with GGally, looks better and more estethic. 
 This plot visualizes quite nicely the distribution of different variables. It shows for example, the gender distribution of the class 2014: mostly females and approximately 1/3 male students. What I found interesting in this plot, is how the attitude towards learning statistics seem to be more positive among male students. Male students also tend to get more points of the course. Briefly, could be said that male student score higher in most variables, with one exception: participation on the course.
@@ -142,13 +139,14 @@ students more positive attitude towards learning statistics spring from tendenci
 
 Choose three variables as explanatory variables and fit a regression model where exam points is the target (dependent) variable. Show a summary of the fitted model and comment and interpret the results. Explain and interpret the statistical test related to the model parameters. If an explanatory variable in your model does not have a statistically significant relationship with the target variable, remove the variable from the model and fit the model again without it.
 ---
-
+```{r}
 p <- ggpairs(Week2, mapping = aes(col = gender, alpha = 0.3), lower = list(combo = wrap("facethist", bins = 20)))
 p
 
 ggpairs(Week2, lower = list(combo = wrap("facethist", bins = 20)))
 my_model2 <- lm(Points ~ Attitude + deep + surf, data = Week2)
 summary(my_model2)
+```
 ---
 The commands aboce give some basic statistics about three explanatory variables, in this case, "attitude", "deep" and "surf", and their coefficients with the dependent variable "points".
 Coefficients:
@@ -168,9 +166,11 @@ From this table can be seen, that the coefficiency with the variable "points",
 is strongest at the variable "attitude". When looking at the p-value (Pr(>|t|),it is usually seen as a good sign to have a p-value of 0.05 or less than 0.05. This would indicate that the results shown wouldn't have happened due to random variation. "There's a 5% chance or less of this happening just due to random variation". When looking at the p-values of the former three variables, can be seen that this is not true to any of the chosen variables. Let's see whether the p-value changes if variable "deep"" was changed to "stra". In both cases the variable "attitude" gets a pretty high p-value, so I decided to change the explanatory variables to "deep", "stra" and "surf" and see what happens.
 
 ---
+```{r}
 ggpairs(Week2, lower = list(combo = wrap("facethist", bins = 20)))
 my_model2 <- lm(Points ~ deep + stra + surf, data = Week2)
 summary(my_model2)
+```
 
 ---
 This still gives fairly high P-values, but lets go onwards.
@@ -222,9 +222,11 @@ dependent variable "points".
 
 Produce the following diagnostic plots: Residuals vs Fitted values, Normal QQ-plot and Residuals vs Leverage. Explain the assumptions of the model and interpret the validity of those assumptions based on the diagnostic plots.
 ---
+```{r}
 my_model2 <- lm(Points ~ Attitude + stra + surf, data = Week2)
 par(mfrow = c(2,2))
 plot(my_model2, which = c(1,2,5))
+```
 ---
 Okay, first of all, a basic look to what these diagnostic plots or so called model validations are used for.
 1) How well the model describes the phenomenon of interest, depends on how well the assumptions fit reality.
@@ -239,7 +241,7 @@ This constant variance assumption implies that the errors should not depend on t
 a problem with the assumptions. The Residuals vs Leverage plot with the chosen variables seem decent, but the spreading of the dots indicates that there might be a even better
 coefficiency with some other variables. 
 
-#WOOOPWOOP I SURVIVED! Got 'em codes working!! And maybe even learned something! What a great feeling.
+WOOOPWOOP I SURVIVED! Got 'em codes working!! And maybe even learned something! What a great feeling.
 
 Am sorry though about some of the text being in larger size, eventhough I removed all the useless hashtags from this text, they somehow did not change back to normal.. If you have any suggestions why this is happening, please let me know (:
 

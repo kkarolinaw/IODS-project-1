@@ -5,4 +5,4 @@
 
 About this project
 *My project aims to get to know and understand how open data science works.
-You can follow my progress on GitHub! https://kkarolinaw.github.io/IODS-project-1/ *
+You can follow my progress on GitHub! https://github.com/kkarolinaw/IODS-project-1 *
