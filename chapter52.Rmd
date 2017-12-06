@@ -1,0 +1,211 @@
+---
+title: "Chapter52.Rmd"
+author: "Maria Karolina Wickholm"
+date: "5 joulukuuta 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Chapter5
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+
+install.packages("FactoMineR")
+Access GGally
+```{r}
+library(GGally)
+library(corrplot)
+library(tidyr)
+library(ggplot2)
+library(FactoMineR)
+library (stringr)
+```
+Load the 'human' data into R. Explore the structure and the dimensions
+of the data and describe the dataset briefly, assuming the reader has no '
+previous knowledge of it (this is now close to the reality, since you 
+have named the variables yourself). (0-1 point)
+the file path of the data
+
+load the data
+```{r}
+human<- read.table("http://s3.amazonaws.com/assets.datacamp.com/production/course_2218/datasets/human1.txt", sep=",", header = T)
+dim(human)
+```
+the dimension of the data
+The Human data has 195 observations and 19 variables
+```{r}
+str(human)  
+```
+The Human data has 195 observations and 19 variables
+Description of the data set
+Origin of the data: http://hdr.undp.org/en/content/human-development-index-hdi
+
+The data used in this analysis consists of various development indicators in
+several countries and is provided by United Nations Development programme.
+The data consists of integer, character and numerical variables, where character=country, 
+int=HDI_rank, GNI_HDI_rank. GII_rank and MatMort. Rest of the data frame are numerical.
+
+Below are the column names and their full meanings
+"Country" = Country name
+"GNI" = Gross National Income per capita
+"Life.Exp" = Life expectancy at birth
+"Edu.Exp" = Expected years of schooling 
+"Mat.Mor" = Maternal mortality ratio
+"Ado.Birth" = Adolescent birth rate
+ 
+Mutate the data: transform the Gross National Income (GNI) variable to numeric
+(Using string manipulation. Note that the mutation of 'human' was not done on DataCamp). (1 point)
+```{r}
+human$GNI <- str_replace(human$GNI, pattern=",", replace ="") %>% as.numeric
+```
+```{r}
+str(human$GNI)
+```
+Exclude unneeded variables: keep only the columns matching the following variable names 
+(described in the meta file above):  
+"Country", "Edu2.FM", "Labo.FM", "Edu.Exp", "Life.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F" (1 point)
+```{r}
+keep <- c("Country", "Edu2.FM", "Labo.FM", "Life.Exp", "Edu.Exp", "GNI", "Mat.Mor", "Ado.Birth", "Parli.F")
+```
+Remove all rows with missing values (1 point).
+```{r}
+library("dplyr")
+human <- select(human, one_of(keep))
+data.frame(human[-1], comp = complete.cases(human))
+human_ <- filter(human, complete.cases(human))
+```
+
+
+Remove the observations which relate to regions instead of countries. (1 point)
+```{r}
+last <- nrow(human_) - 7
+human_ <- human_[1:last,]
+```
+
+Define the row names of the data by the country names and remove the country name column from the
+data. The data should now have 155 observations and 8 variables. Save the human data in your data 
+folder including the row names. You can overwrite your old 'human' data. (1 point)
+```{r}
+rownames(human_) <- human_$Country
+human_ <- select(human_, -Country)
+```
+
+The human_ data has now 155 observations and 8 variables
+Data wrangled YEAH!!
+```{r}
+str(human_)
+```
+
+```{r}
+library(GGally)
+ggpairs(human_)
+```
+Show a graphical overview of the data and show summaries of the variables in the data. Describe and interpret the outputs, commenting on the distributions of the variables and the relationships between them. (0-2 points)
+
+From the plot drawn with ggpairs, we can see that some variables seem to correlate more positive or negative, compared to others. For example, life expectancy at birth and expected years of education have a pretty high correlation (0.789). Also the maternal mortality ratio has
+a high correlation with life expectancy at birth (-0.857). Basicly, the further away from 0, both positive and negative, gives a hint about which variables seem to correlate with others. 
+
+
+```{r}
+cor(human_)%>%corrplot()
+summary(human_)
+```
+```{r}
+pca_unstand_human<- prcomp(human_)
+s_hum<-summary(pca_unstand_human)
+s_hum
+```
+Perform principal component analysis (PCA) on the not standardized human data. Show the variability captured by the principal components. Draw a biplot displaying the observations by the first two principal components (PC1 coordinate in x-axis, PC2 coordinate in y-axis), along with arrows representing the original variables. (0-2 points)
+```{r}
+pca_pro<- round(100*s_hum$importance[2,], digits = 3)
+pca_pro
+pc_label<-paste0(names(pca_pro), " (", pca_pro, "%)")
+biplot(pca_unstand_human, cex = c(0.8, 1), col = c("grey40", "red"), xlab = pc_label[1], ylab = pc_label[2])
+```
+Perform principal component analysis (PCA) on the not standardized human data. Show the variability captured by the principal components. Draw a biplot displaying the observations by the first two principal components (PC1 coordinate in x-axis, PC2 coordinate in y-axis), along with arrows representing the original variables. (0-2 points)
+
+```{r}
+human_scaled<- scale(human_)
+summary(human_scaled)
+```
+Standardize the variables in the human data and repeat the above analysis. Interpret the results of both analysis (with and without standardizing). Are the results different? Why or why not? Include captions in you plots where you describe the results by using not just your variable names, but the actual phenomenons they relate to. (0-4 points)
+```{r}
+pca_human_scaled<- prcomp(human_scaled)
+s_hum2<-summary(pca_human_scaled)
+s_hum2
+```
+```{r}
+pca_pro2<- round(100*s_hum2$importance[2,], digits = 3)
+pca_pro2
+```
+```{r}
+pc_label2<-paste0(names(pca_pro2), " (", pca_pro2, "%)")
+par(mfrow=c(2,1))
+```
+```{r}
+biplot(pca_human_scaled, cex = c(0.7, 0.7), col = c("grey", "red"), xlab = pc_label2[1], ylab = pc_label2[2])
+biplot(pca_unstand_human, cex = c(0.8, 1), col = c("grey40", "red"), xlab = pc_label[1], ylab = pc_label[2])
+```
+Give your personal interpretations of the first two principal component dimensions based on the biplot drawn after PCA on the standardized human data. (0-2 points)
+From the biplots we can see that the biplot drawn with unscaled variables differ a lot from the biplot drawn with scaled variables. The unscaled one is messy and the only variable that can be seen is the GNI. This is due to the differences in values in the unscaled variables.From the scaled biplot can be seen that the proportion of females in the labour force and the Percetange of female representatives in parliament
+are almost at a 90 degree angle and therefor less related to Maternal mortality ratio, than for example Adolescent birth rate, Expected years of schooling and Life expectancy at birth.
+
+```{r}
+library("FactoMineR")
+data(tea)
+str(tea)
+dim(tea)
+```
+
+Load the tea dataset from the package Factominer. Explore the data briefly: look at the structure and the dimensions of the data and visualize it. Then do Multiple Correspondence Analysis on the tea data (or to a certain columns of the data, it's up to you). Interpret the results of the MCA and draw at least the variable biplot of the analysis. You can also explore other plotting options for MCA. Comment on the output of the plots. (0-4 points)
+
+```{r}
+colnames(tea)
+keep_columns <- c("Tea", "How", "how", "sugar", "where","lunch", "dinner", "always")
+```
+```{r}
+tea_time <- tea[, keep_columns]
+```
+```{r}
+summary(tea_time)
+str(tea_time)
+```
+
+```{r}
+library("tidyverse")
+gather(tea_time) %>% ggplot(aes(value)) + facet_wrap("key", scales = "free") + geom_bar() 
+```
+```{r}
+mca <- MCA(tea_time, graph = T)
+```
+```{r}
+mca$eig
+```
+```{r}
+summary(mca)
+dimdesc(mca)
+```
+```{r}
+plot(mca, invisible=c("ind"), habillage="quali")
+```
+```{r}
+plot(mca, invisible=c("ind"), habillage="quali", selectMod = "contrib 3")
+mca
+```
+```{r}
+categ = apply(tea_time, 2, function(x) nlevels(as.factor(x)))
+categ
+rep("c", 3)
+```
+```{r}
+mca_vars_df = data.frame(mca$var$coord, Variable = rep(names(categ), categ))
+mca_vars_df
+mca_obs_df = data.frame(mca$ind$coord)
+```
+
